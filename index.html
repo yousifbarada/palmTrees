@@ -1,10 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palm Tree Disease Detection</title>
+    <style>
+        :root {
+            --sand: #f5ede0;
+            --leaf: #2d6a4f;
+            --gold: #c9932a;
+            --text: #2c1a0e;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--sand);
+            color: var(--text);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* هنمنع السكرول طول ما شاشة التحميل موجودة */
+            overflow: hidden;
+        }
+
+        /* ⏳ شاشة التحميل اللي هتغطي الواجهة في البداية */
+        #startupOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--sand);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #e8d9c4;
+            border-top: 5px solid var(--leaf);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* ستايل الواجهة الأساسية */
+        .container {
+            background: #fffdf9;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(92,61,30,0.15);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            /* هنخفيها في البداية */
+            display: none;
+        }
+        h1 { color: var(--leaf); margin-bottom: 10px; }
+        p { color: #7a5c3a; margin-bottom: 30px; }
+
+        .upload-area {
+            border: 2px dashed #8b6340;
+            border-radius: 12px;
+            padding: 40px 20px;
+            background: #fbf8f3;
+            margin-bottom: 20px;
+        }
+        input[type="file"] { font-size: 16px; }
+        button {
+            background: var(--leaf); color: white; border: none;
+            padding: 12px 24px; border-radius: 8px; cursor: pointer;
+            font-size: 16px; font-weight: bold; transition: 0.3s;
+        }
+        button:hover { background: #1b4332; }
+        button:disabled { background: #a8d8c2; cursor: not-allowed; }
+
+        #loading { display: none; margin-top: 20px; color: #e67e22; font-weight: bold; font-size: 18px; }
+
+        #results { display: none; margin-top: 40px; text-align: center; border-top: 2px solid var(--sand); padding-top: 30px;}
+        .result-img { max-width: 100%; border-radius: 12px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .download-btn {
+            display: inline-block; background: var(--gold); color: white;
+            padding: 12px 20px; text-decoration: none; border-radius: 8px;
+            font-weight: bold; margin-top: 20px; transition: 0.3s;
+        }
+        .download-btn:hover { background: #b07e21; }
+    </style>
 </head>
 <body>
-$END$
+
+    <div id="startupOverlay">
+        <div class="spinner"></div>
+        <h2 style="color: var(--leaf);">⏳ جاري تشغيل نماذج الذكاء الاصطناعي...</h2>
+        <p style="color: var(--text-muted);">الرجاء الانتظار، السيرفر بيحمل البيانات والموديلز.</p>
+    </div>
+
+    <div class="container" id="mainApp">
+        <h1>🌴 Palm Tree Health AI</h1>
+        <p>Upload an image or video for automatic disease detection and diagnosis.</p>
+
+        <form id="uploadForm">
+            <div class="upload-area">
+                <input type="file" id="fileInput" accept="image/*,video/*" required>
+            </div>
+            <button type="submit">🔍 Analyze File</button>
+        </form>
+
+        <div id="loading">⏳ Processing... The AI is analyzing the trees and writing the report.</div>
+
+        <div id="results">
+            <h2 style="color: var(--leaf);">✅ Analysis Complete!</h2>
+
+            <a id="reportLink" class="download-btn" href="#" target="_blank" style="display: none;">
+                📄 View Comprehensive Diagnostic Report
+            </a>
+            <br>
+            <img id="annotatedImage" class="result-img" src="" alt="Annotated Output" style="display: none;">
+        </div>
+    </div>
+
+    <script>
+        // 1. الدالة دي بتفضل تسأل السيرفر: "أنت جاهز؟"
+        async function checkServerReady() {
+            try {
+                const response = await fetch('http://localhost:8000/api/health');
+                if (response.ok) {
+                    // السيرفر جاهز! هنخفي شاشة التحميل ونظهر الواجهة
+                    document.getElementById('startupOverlay').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'block';
+                    document.body.style.overflow = 'auto'; // نرجع السكرول
+                    return; // نوقف اللوب
+                }
+            } catch (error) {
+                // السيرفر لسه مقامش (Connection Refused)
+                console.log("Server is still starting...");
+            }
+            // لو السيرفر مش جاهز، جرب تاني كمان ثانيتين
+            setTimeout(checkServerReady, 2000);
+        }
+
+        // نشغل الـ Check أول ما الصفحة تفتح
+        window.onload = checkServerReady;
+
+        // 2. كود رفع الملف والتحليل (نفس الكود اللي فات)
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files.length) return;
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            // UI updates for loading state
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            document.querySelector('button').disabled = true;
+
+            try {
+                const response = await fetch('http://localhost:8000/api/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || err.message || "An error occurred during analysis.");
+                }
+
+                const data = await response.json();
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('results').style.display = 'block';
+                document.querySelector('button').disabled = false;
+
+                const imgElement = document.getElementById('annotatedImage');
+                if (data.annotated_image) {
+                    imgElement.src = `http://localhost:8000/api/download-image?filepath=${encodeURIComponent(data.annotated_image)}`;
+                    imgElement.style.display = 'block';
+                } else {
+                    imgElement.style.display = 'none';
+                }
+
+                const reportLink = document.getElementById('reportLink');
+                if (data.report_html_file) {
+                    reportLink.href = `http://localhost:8000/api/download-report?filepath=${encodeURIComponent(data.report_html_file)}`;
+                    reportLink.style.display = 'inline-block';
+                }
+
+            } catch (error) {
+                alert("❌ Error: " + error.message);
+                document.getElementById('loading').style.display = 'none';
+                document.querySelector('button').disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>

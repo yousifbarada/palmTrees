@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تقرير شجرة النخيل رقم 1</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
+
+        :root {
+            --sand:       #f5ede0;
+            --sand-dark:  #e8d9c4;
+            --bark:       #5c3d1e;
+            --bark-light: #8b6340;
+            --leaf:       #2d6a4f;
+            --leaf-light: #52b788;
+            --gold:       #c9932a;
+            --text:       #2c1a0e;
+            --text-muted: #7a5c3a;
+            --white:      #fffdf9;
+            --shadow:     rgba(92,61,30,.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--sand);
+            color: var(--text);
+            direction: rtl;
+            min-height: 100vh;
+        }
+
+        /* ── Container ── */
+        .container {
+            max-width: 860px;
+            margin: 40px auto;
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px var(--shadow);
+        }
+
+        /* ── Hero Header ── */
+        .header-section {
+            background: linear-gradient(135deg, var(--leaf) 0%, #1b4332 60%, var(--bark) 100%);
+            padding: 48px 40px 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-section::before {
+            content: '🌴';
+            position: absolute;
+            left: -20px;
+            top: -10px;
+            font-size: 160px;
+            opacity: .07;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .header {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: .02em;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--leaf-light);
+        }
+
+        /* ── Meta bar ── */
+        .meta-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--sand-dark);
+            padding: 16px 40px;
+            border-bottom: 2px solid var(--sand);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meta-label {
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .meta-value {
+            font-size: .95rem;
+            font-weight: 500;
+            color: var(--bark);
+        }
+
+        /* ── Content area ── */
+        .content {
+            padding: 36px 40px 48px;
+        }
+
+        /* ── Sections ── */
+        .section {
+            margin-bottom: 28px;
+            border-radius: 12px;
+            background: var(--sand);
+            overflow: hidden;
+            border: 1px solid var(--sand-dark);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            background: linear-gradient(90deg, var(--leaf), var(--bark-light));
+            padding: 12px 20px;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section p {
+            font-size: .95rem;
+            line-height: 1.8;
+            color: var(--text);
+            padding: 14px 20px 0;
+        }
+
+        .section p:last-child {
+            padding-bottom: 14px;
+        }
+
+        /* ── Lists ── */
+        .section ul {
+            list-style: none;
+            padding: 12px 20px 14px 20px;
+        }
+
+        .section ul ul {
+            padding: 4px 20px 4px 0;
+            margin-top: 2px;
+        }
+
+        .section li {
+            position: relative;
+            font-size: .92rem;
+            line-height: 1.7;
+            color: var(--text);
+            padding-right: 22px;
+            margin-bottom: 4px;
+        }
+
+        .section li::before {
+            content: '';
+            position: absolute;
+            right: 6px;
+            top: .65em;
+            width: 7px;
+            height: 7px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        .section ul ul li::before {
+            width: 5px;
+            height: 5px;
+            background: var(--leaf-light);
+            right: 8px;
+        }
+
+        /* ── Standalone paragraphs (outside sections) ── */
+        .content > p {
+            font-size: .95rem;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        /* ── Print styles ── */
+        @media print {
+            body { background: #fff; }
+            .container { box-shadow: none; margin: 0; border-radius: 0; }
+            .header-section { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <div class="header">🌴 تقرير شجرة النخيل</div>
+            <div class="header-subtitle">رقم الشجرة: #1</div>
+        </div>
+        <div class="meta-info">
+            <div class="meta-item">
+                <div class="meta-label">📅 التاريخ:</div>
+                <div class="meta-value">2026-04-26</div>
+            </div>
+        </div>
+        <div class="content">
+<p>❌ خطأ في توليد التقرير: 403 Your API key was reported as leaked. Please use another API key.</p></div></div></body></html>

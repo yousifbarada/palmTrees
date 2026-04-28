@@ -6,10 +6,10 @@ CLF_MODEL_PATH = r"C:\Users\ASUS\Downloads\model111.keras"
 TYPE_MODEL_PATH = r"D:\Intern\brand_classifier.keras"
 
 # RAG Data Path
-RAG_DATA_PATH = "rag_data/palm_diseases.txt"
+RAG_DATA_PATH = r"D:\Intern\rag_data\palm_diseases.txt"
 
 # API Keys
-GEMINI_API_KEY = "AIzaSyClr7L_CZpE_PNx4mE3CgpPbjZENgN_qKA"
+GEMINI_API_KEY = "AIzaSyDCi-9mrdliqSI3M9FO79Y1XiyqzbZJ5yI"
 
 # Classes
 CLASSES = ["Badly_damaged", "Dead", "Infected", "healthy"]

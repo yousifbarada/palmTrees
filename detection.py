@@ -62,7 +62,7 @@ def predict_video(path=None):
                 h = y2 - y1
                 leaf_crop = frame[y1:int(y1 + 0.6*h), x1:x2]
                 full_img = frame[y1:y2, x1:x2]
-                
+
                 if leaf_crop.size == 0:
                     continue
 
@@ -114,9 +114,9 @@ def predict_video(path=None):
                 cv2.rectangle(frame, (x1, y_text-30), (x1+300, y_text), color, -1)
                 cv2.putText(frame, text, (x1+5, y_text-8), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-        cv2.imshow("Palm Detection", frame)
-        if cv2.waitKey(20) & 0xFF == 27:
-            break
+        #cv2.imshow("Palm Detection", frame)
+       # if cv2.waitKey(20) & 0xFF == 27:
+         #   break
 
     cap.release()
     cv2.destroyAllWindows()

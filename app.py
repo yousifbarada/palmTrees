@@ -3,8 +3,8 @@ import os
 from detection import predict_video, predict_image
 from decision import get_final_decision_with_prob
 from rag_engine import RAGSystem, process_disease
-from export import save_report_as_pdf_arabic
 from config import CLASSES, DISEASE_CLASSES, RAG_DATA_PATH
+
 
 def main():
     # 1. Get input from user
@@ -15,7 +15,6 @@ def main():
         print("❌ Error: The specified file does not exist.")
         return
 
-    # File extensions
     image_extensions = ('.jpg', '.jpeg', '.png', '.bmp', '.webp')
     video_extensions = ('.mp4', '.avi', '.mov', '.mkv')
 
@@ -25,10 +24,8 @@ def main():
     if target_path.lower().endswith(image_extensions):
         print("🖼️ Image detected. Running image prediction...")
         output_filename = "annotated_" + os.path.basename(target_path)
-        
-        # Run detection and get formatted results directly
         final_results = predict_image(target_path, output_path=output_filename)
-        
+
         if not final_results:
             print("⚠️ No trees detected in the image.")
             return
@@ -36,7 +33,7 @@ def main():
     elif target_path.lower().endswith(video_extensions):
         print("🎬 Video detected. Running video prediction...")
         track_history, track_history_type = predict_video(target_path)
-        
+
         print("🧠 Calculating final disease probabilities from video frames...")
         final_results = get_final_decision_with_prob(
             pest_history=track_history,
@@ -48,19 +45,23 @@ def main():
         print("⚠️ Unsupported file format. Please provide a standard image or video file.")
         return
 
-    # 3. Generate Reports using AI RAG System
+    # 3. Generate unified crop report via RAG
     if final_results:
         print("📚 Initializing RAG System...")
         rag = RAGSystem(RAG_DATA_PATH)
-        
-        print("📝 Generating comprehensive AI reports...")
-        reports = process_disease(final_results, rag)
-        
-        print("💾 Saving reports to disk (HTML/TXT/PDF)...")
-        for tree_id, report_content in reports.items():
-            save_report_as_pdf_arabic(report_content, tree_id=tree_id)
-            
-        print("🎉 Processing Complete!")
+
+        print("📝 Generating comprehensive AI reports for all trees...")
+        reports, crop_html = process_disease(
+            detection_results=final_results,
+            rag_system=rag,
+            crop_name="النخيل",
+            save_individual=False,   # set True to also save per-tree HTML/PDF
+        )
+
+        print(f"\n🎉 Processing Complete!")
+        print(f"📄 Unified crop report saved → {crop_html}")
+        print(f"🌴 Trees processed: {len(reports)}")
+
 
 if __name__ == "__main__":
     main()
