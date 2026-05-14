@@ -9,7 +9,7 @@ TYPE_MODEL_PATH = r"D:\Intern\brand_classifier.keras"
 RAG_DATA_PATH = r"D:\Intern\rag_data\palm_diseases.txt"
 
 # API Keys
-GEMINI_API_KEY = "AIzaSyDCi-9mrdliqSI3M9FO79Y1XiyqzbZJ5yI"
+GEMINI_API_KEY = "key"
 
 # Classes
 CLASSES = ["Badly_damaged", "Dead", "Infected", "healthy"]
